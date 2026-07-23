@@ -47,6 +47,11 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'sandip-fas-backend is running and connected to Neon' });
 });
 
+// Root route for base URL
+app.get('/', (req, res) => {
+  res.send('Sandip FAS Backend is up and running successfully on Vercel!');
+});
+
 // NOTE: static files are served by Render Static Site (sandip-fas-frontend)
 
 app.use((err, req, res, next) => {
