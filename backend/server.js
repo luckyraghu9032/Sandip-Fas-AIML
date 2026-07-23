@@ -12,7 +12,7 @@ const ALLOWED_ORIGINS = [
   'http://127.0.0.1:3000',
   'http://localhost:5500',        // VS Code Live Server
   'http://127.0.0.1:5500',
-  'https://sandip-fas-aiml-backend.vercel.app',  // Render frontend static site
+  'https://sandip-fas-aiml-frontend.vercel.app/',  // Render frontend static site
 ];
 
 const corsOptions = {
