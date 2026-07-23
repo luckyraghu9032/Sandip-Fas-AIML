@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Coordinator Dashboard | FAS Portal</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/student.css">
   <link rel="icon" type="image/svg+xml" href="public/favicon.svg">
 </head>
+
 <body>
   <nav class="navbar">
     <div class="container navbar-container" style="max-width:100%;padding:0 2rem">
@@ -79,17 +82,24 @@
 
       <!-- ── Overview Tab ── -->
       <div id="tab-overview">
-        <div class="card" style="background:linear-gradient(135deg,#003366 0%,#004488 100%);border:none;color:#fff;padding:2.5rem 2rem">
+        <div class="card"
+          style="background:linear-gradient(135deg,#003366 0%,#004488 100%);border:none;color:#fff;padding:2.5rem 2rem">
           <div style="display:flex;align-items:center;gap:1.25rem;margin-bottom:1.5rem">
-            <div style="width:4rem;height:4rem;border-radius:1.15rem;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <div
+              style="width:4rem;height:4rem;border-radius:1.15rem;background:rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0">
               <i data-lucide="users" style="width:2rem;height:2rem;color:#fff"></i>
             </div>
             <div>
-              <div style="font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.7);margin-bottom:0.25rem">Sandip University &mdash; FAS Portal</div>
-              <div style="font-size:1.6rem;font-weight:800;line-height:1.2" id="overview-welcome-name">Welcome, Coordinator</div>
+              <div
+                style="font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:rgba(255,255,255,0.7);margin-bottom:0.25rem">
+                Sandip University &mdash; FAS Portal</div>
+              <div style="font-size:1.6rem;font-weight:800;line-height:1.2" id="overview-welcome-name">Welcome,
+                Coordinator</div>
             </div>
           </div>
-          <p style="color:rgba(255,255,255,0.82);font-size:0.97rem;max-width:42rem;line-height:1.7">You are logged in to the Faculty Advisor System. Use the sidebar to manage your division students, view their handbooks, and respond to meeting reports raised by students.</p>
+          <p style="color:rgba(255,255,255,0.82);font-size:0.97rem;max-width:42rem;line-height:1.7">You are logged in to
+            the Faculty Advisor System. Use the sidebar to manage your division students, view their handbooks, and
+            respond to meeting reports raised by students.</p>
         </div>
 
         <div class="stats-grid" style="margin-top:0">
@@ -111,7 +121,8 @@
           </div>
           <div class="card stat-card">
             <div class="stat-topline">
-              <div class="stat-icon bg-emerald-light"><i data-lucide="message-square" class="icon text-emerald"></i></div>
+              <div class="stat-icon bg-emerald-light"><i data-lucide="message-square" class="icon text-emerald"></i>
+              </div>
             </div>
             <div class="stat-caption">Pending Actions</div>
             <div class="stat-value" id="overview-pending-count">—</div>
@@ -127,23 +138,29 @@
             </div>
           </div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem">
-            <button class="portal-card card-glow" onclick="switchTab('students')" style="border:none;cursor:pointer;text-align:left">
-              <div class="portal-icon-wrapper bg-blue-light"><i data-lucide="graduation-cap" class="icon-lg text-blue"></i></div>
+            <button class="portal-card card-glow" onclick="switchTab('students')"
+              style="border:none;cursor:pointer;text-align:left">
+              <div class="portal-icon-wrapper bg-blue-light"><i data-lucide="graduation-cap"
+                  class="icon-lg text-blue"></i></div>
               <div class="portal-title">Students</div>
               <div class="portal-desc">Upload and manage your division students</div>
             </button>
-            <button class="portal-card card-glow" onclick="switchTab('handbook')" style="border:none;cursor:pointer;text-align:left">
+            <!-- <button class="portal-card card-glow" onclick="switchTab('handbook')" style="border:none;cursor:pointer;text-align:left">
               <div class="portal-icon-wrapper bg-violet-light"><i data-lucide="book-open" class="icon-lg text-violet"></i></div>
               <div class="portal-title">Handbook</div>
               <div class="portal-desc">View student mentor-mentee handbooks</div>
-            </button>
-            <button class="portal-card card-glow" onclick="switchTab('meetings')" style="border:none;cursor:pointer;text-align:left">
-              <div class="portal-icon-wrapper bg-emerald-light"><i data-lucide="message-square" class="icon-lg text-emerald"></i></div>
+            </button> -->
+            <button class="portal-card card-glow" onclick="switchTab('meetings')"
+              style="border:none;cursor:pointer;text-align:left">
+              <div class="portal-icon-wrapper bg-emerald-light"><i data-lucide="message-square"
+                  class="icon-lg text-emerald"></i></div>
               <div class="portal-title">Meeting Reports</div>
               <div class="portal-desc">Review and respond to student problems</div>
             </button>
-            <button class="portal-card card-glow" onclick="switchTab('fas')" style="border:none;cursor:pointer;text-align:left">
-              <div class="portal-icon-wrapper bg-violet-light"><i data-lucide="download" class="icon-lg text-violet"></i></div>
+            <button class="portal-card card-glow" onclick="switchTab('fas')"
+              style="border:none;cursor:pointer;text-align:left">
+              <div class="portal-icon-wrapper bg-violet-light"><i data-lucide="download"
+                  class="icon-lg text-violet"></i></div>
               <div class="portal-title">FAS</div>
               <div class="portal-desc">Download a student FAS handbook by PRN</div>
             </button>
@@ -212,7 +229,8 @@
             <label class="form-label">Select Student</label>
             <div class="input-wrapper">
               <i data-lucide="user" class="input-icon"></i>
-              <select id="handbook-student-select" class="form-input form-select" onchange="loadCoordHandbook(this.value)">
+              <select id="handbook-student-select" class="form-input form-select"
+                onchange="loadCoordHandbook(this.value)">
                 <option value="">-- Select a student --</option>
               </select>
             </div>
@@ -221,37 +239,46 @@
 
         <!-- Section nav -->
         <div id="handbook-section-nav" style="display:none;flex-wrap:wrap;gap:0.5rem;margin:0.5rem 0">
-          <a href="#" class="ch-nav-link sidebar-link" data-section="handbook" style="padding:0.5rem 0.9rem;border-radius:0.75rem">Cover</a>
-          <a href="#" class="ch-nav-link sidebar-link" data-section="index" style="padding:0.5rem 0.9rem;border-radius:0.75rem">Index</a>
-          <a href="#" class="ch-nav-link sidebar-link" data-section="profile" style="padding:0.5rem 0.9rem;border-radius:0.75rem">Student Details</a>
-          <a href="#" class="ch-nav-link sidebar-link" data-section="academic" style="padding:0.5rem 0.9rem;border-radius:0.75rem">Academic Progress</a>
-          <a href="#" class="ch-nav-link sidebar-link" data-section="mentor-info" style="padding:0.5rem 0.9rem;border-radius:0.75rem">Mentor Info</a>
-          <a href="#" class="ch-nav-link sidebar-link" data-section="meeting" style="padding:0.5rem 0.9rem;border-radius:0.75rem">Meeting Report</a>
-          <a href="#" class="ch-nav-link sidebar-link" data-section="vision" style="padding:0.5rem 0.9rem;border-radius:0.75rem">Vision-Mission</a>
+          <a href="#" class="ch-nav-link sidebar-link" data-section="handbook"
+            style="padding:0.5rem 0.9rem;border-radius:0.75rem">Cover</a>
+          <a href="#" class="ch-nav-link sidebar-link" data-section="index"
+            style="padding:0.5rem 0.9rem;border-radius:0.75rem">Index</a>
+          <a href="#" class="ch-nav-link sidebar-link" data-section="profile"
+            style="padding:0.5rem 0.9rem;border-radius:0.75rem">Student Details</a>
+          <a href="#" class="ch-nav-link sidebar-link" data-section="academic"
+            style="padding:0.5rem 0.9rem;border-radius:0.75rem">Academic Progress</a>
+          <a href="#" class="ch-nav-link sidebar-link" data-section="mentor-info"
+            style="padding:0.5rem 0.9rem;border-radius:0.75rem">Mentor Info</a>
+          <a href="#" class="ch-nav-link sidebar-link" data-section="meeting"
+            style="padding:0.5rem 0.9rem;border-radius:0.75rem">Meeting Report</a>
+          <a href="#" class="ch-nav-link sidebar-link" data-section="vision"
+            style="padding:0.5rem 0.9rem;border-radius:0.75rem">Vision-Mission</a>
         </div>
 
         <!-- Section content -->
         <div id="handbook-content-area">
           <div id="ch-section-handbook" style="display:none"></div>
-          <div id="ch-section-index"    style="display:none"></div>
-          <div id="ch-section-profile"  style="display:none"></div>
+          <div id="ch-section-index" style="display:none"></div>
+          <div id="ch-section-profile" style="display:none"></div>
           <div id="ch-section-academic" style="display:none"></div>
           <div id="ch-section-mentor-info" style="display:none"></div>
           <div id="ch-section-meeting" style="display:none"></div>
-          <div id="ch-section-vision"  style="display:none"></div>
+          <div id="ch-section-vision" style="display:none"></div>
         </div>
       </div>
 
       <!-- ── FAS Download Tab ── -->
       <div id="tab-fas" style="display:none">
-        <div class="card" style="background:linear-gradient(135deg,rgba(124,58,237,0.06),rgba(37,99,235,0.04));border:2px solid rgba(124,58,237,0.18)">
+        <div class="card"
+          style="background:linear-gradient(135deg,rgba(124,58,237,0.06),rgba(37,99,235,0.04));border:2px solid rgba(124,58,237,0.18)">
           <div class="panel-header">
             <div>
               <p class="panel-eyebrow">FAS Download</p>
               <h2 class="panel-title">Download Student FAS Handbook</h2>
             </div>
           </div>
-          <p class="text-muted mb-4">Enter a student's PRN number from your division to generate and download their complete FAS handbook PDF.</p>
+          <p class="text-muted mb-4">Enter a student's PRN number from your division to generate and download their
+            complete FAS handbook PDF.</p>
           <div class="form-group" style="max-width:24rem">
             <label for="fas-prn-input" class="form-label">Student PRN Number</label>
             <div class="input-wrapper">
@@ -263,92 +290,95 @@
           <div class="form-error" id="fas-download-error" style="display:none"></div>
           <div class="form-success" id="fas-download-success" style="display:none"></div>
           <div id="fas-pdf-msg" style="margin-bottom:0.75rem"></div>
-          <button type="button" class="btn btn-primary" id="fas-download-btn" onclick="downloadCoordFasByPrn()" style="background:linear-gradient(135deg,#7c3aed,#2563eb);border:none;padding:0.85rem 2rem">
+          <button type="button" class="btn btn-primary" id="fas-download-btn" onclick="downloadCoordFasByPrn()"
+            style="background:linear-gradient(135deg,#7c3aed,#2563eb);border:none;padding:0.85rem 2rem">
             <span>📥 Download FAS PDF</span>
           </button>
-          <div style="margin-top:1rem;padding:0.85rem 1rem;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:0.75rem;font-size:0.82rem;color:#92400e">
-            Only students assigned to your division can be downloaded. Empty profile fields will appear as dotted lines in the PDF.
+          <div
+            style="margin-top:1rem;padding:0.85rem 1rem;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.25);border-radius:0.75rem;font-size:0.82rem;color:#92400e">
+            Only students assigned to your division can be downloaded. Empty profile fields will appear as dotted lines
+            in the PDF.
           </div>
-</div>
-       </div>
+        </div>
+      </div>
 
-       <!-- ── Coordinator Profile Tab ── -->
-       <div id="tab-coordinator-profile" style="display:none">
-         <div class="card">
-           <div class="panel-header">
-             <div>
-               <p class="panel-eyebrow">Mentor Information</p>
-               <h2 class="panel-title">Academic Year ............</h2>
-             </div>
-           </div>
-           <div id="coordinator-profile-form">
-             <div class="form-group">
-               <label for="academic-year" class="form-label">Academic Year</label>
-               <div class="input-wrapper">
-                 <i data-lucide="calendar" class="input-icon"></i>
-                 <input type="text" id="academic-year" class="form-input" placeholder="e.g. 2024-25">
-               </div>
-             </div>
-             <div class="form-group">
-               <label for="mentor-name" class="form-label">Mentor Name</label>
-               <div class="input-wrapper">
-                 <i data-lucide="user" class="input-icon"></i>
-                 <input type="text" id="mentor-name" class="form-input" placeholder="Your full name">
-               </div>
-             </div>
-             <div class="form-group">
-               <label for="mentor-school" class="form-label">School</label>
-               <div class="input-wrapper">
-                 <i data-lucide="book-open" class="input-icon"></i>
-                 <input type="text" id="mentor-school" class="form-input" placeholder="School name">
-               </div>
-             </div>
-             <div class="form-group">
-               <label for="mentor-department" class="form-label">Department</label>
-               <div class="input-wrapper">
-                 <i data-lucide="bookmark" class="input-icon"></i>
-                 <input type="text" id="mentor-department" class="form-input" placeholder="Department name">
-               </div>
-             </div>
-             <div class="form-group">
-               <label for="mentor-contact" class="form-label">Contact Details</label>
-               <div class="input-wrapper">
-                 <i data-lucide="phone" class="input-icon"></i>
-                 <input type="text" id="mentor-contact" class="form-input" placeholder="Mobile number">
-               </div>
-             </div>
-             <div class="form-group">
-               <label for="mentor-email" class="form-label">Email ID</label>
-               <div class="input-wrapper">
-                 <i data-lucide="mail" class="input-icon"></i>
-                 <input type="email" id="mentor-email" class="form-input" placeholder="Email address">
-               </div>
-             </div>
-             <div class="form-group">
-               <label for="mentee-count" class="form-label">No of Mentee Allocated</label>
-               <div class="input-wrapper">
-                 <i data-lucide="users" class="input-icon"></i>
-                 <input type="number" id="mentee-count" class="form-input" placeholder="Number of students" min="0">
-               </div>
-             </div>
-             <div class="form-group">
-               <label for="mentee-class" class="form-label">Class of a Mentee</label>
-               <div class="input-wrapper">
-                 <i data-lucide="tag" class="input-icon"></i>
-                 <input type="text" id="mentee-class" class="form-input" placeholder="e.g. FE-A, SE-B (comma separated)">
-               </div>
-             </div>
-             <div class="form-error" id="profile-error" style="display:none"></div>
-             <div class="form-success" id="profile-success" style="display:none"></div>
-             <button type="button" class="btn btn-primary" id="save-profile-btn">
-               <i data-lucide="save"></i> Save Profile
-             </button>
-           </div>
-         </div>
-       </div>
+      <!-- ── Coordinator Profile Tab ── -->
+      <div id="tab-coordinator-profile" style="display:none">
+        <div class="card">
+          <div class="panel-header">
+            <div>
+              <p class="panel-eyebrow">Mentor Information</p>
+              <h2 class="panel-title">Academic Year ............</h2>
+            </div>
+          </div>
+          <div id="coordinator-profile-form">
+            <div class="form-group">
+              <label for="academic-year" class="form-label">Academic Year</label>
+              <div class="input-wrapper">
+                <i data-lucide="calendar" class="input-icon"></i>
+                <input type="text" id="academic-year" class="form-input" placeholder="e.g. 2024-25">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="mentor-name" class="form-label">Mentor Name</label>
+              <div class="input-wrapper">
+                <i data-lucide="user" class="input-icon"></i>
+                <input type="text" id="mentor-name" class="form-input" placeholder="Your full name">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="mentor-school" class="form-label">School</label>
+              <div class="input-wrapper">
+                <i data-lucide="book-open" class="input-icon"></i>
+                <input type="text" id="mentor-school" class="form-input" placeholder="School name">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="mentor-department" class="form-label">Department</label>
+              <div class="input-wrapper">
+                <i data-lucide="bookmark" class="input-icon"></i>
+                <input type="text" id="mentor-department" class="form-input" placeholder="Department name">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="mentor-contact" class="form-label">Contact Details</label>
+              <div class="input-wrapper">
+                <i data-lucide="phone" class="input-icon"></i>
+                <input type="text" id="mentor-contact" class="form-input" placeholder="Mobile number">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="mentor-email" class="form-label">Email ID</label>
+              <div class="input-wrapper">
+                <i data-lucide="mail" class="input-icon"></i>
+                <input type="email" id="mentor-email" class="form-input" placeholder="Email address">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="mentee-count" class="form-label">No of Mentee Allocated</label>
+              <div class="input-wrapper">
+                <i data-lucide="users" class="input-icon"></i>
+                <input type="number" id="mentee-count" class="form-input" placeholder="Number of students" min="0">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="mentee-class" class="form-label">Class of a Mentee</label>
+              <div class="input-wrapper">
+                <i data-lucide="tag" class="input-icon"></i>
+                <input type="text" id="mentee-class" class="form-input" placeholder="e.g. FE-A, SE-B (comma separated)">
+              </div>
+            </div>
+            <div class="form-error" id="profile-error" style="display:none"></div>
+            <div class="form-success" id="profile-success" style="display:none"></div>
+            <button type="button" class="btn btn-primary" id="save-profile-btn">
+              <i data-lucide="save"></i> Save Profile
+            </button>
+          </div>
+        </div>
+      </div>
 
-       <!-- ── Meeting Reports Tab ── -->
-       <div id="tab-meetings" style="display:none">
+      <!-- ── Meeting Reports Tab ── -->
+      <div id="tab-meetings" style="display:none">
         <div class="card">
           <div class="panel-header">
             <div>
@@ -357,7 +387,8 @@
             </div>
             <span class="panel-chip panel-chip-neutral" id="meeting-pending-count"></span>
           </div>
-          <p class="text-muted mb-4">Students who have raised problems are listed below. Select a student to review and fill your action &amp; signature.</p>
+          <p class="text-muted mb-4">Students who have raised problems are listed below. Select a student to review and
+            fill your action &amp; signature.</p>
 
           <!-- Student selector -->
           <div class="form-group" style="max-width:24rem">
@@ -377,7 +408,8 @@
     </main>
   </div>
 
-  <!-- Coordinator Profile Tab -->`n  <script src="js/coord-profile.js"></script>`n  <!-- Change Password Modal -->
+  <!-- Coordinator Profile Tab -->`n
+  <script src="js/coord-profile.js"></script>`n <!-- Change Password Modal -->
   <div class="modal-backdrop" id="change-password-modal" style="display:none">
     <div class="modal-container">
       <div class="modal-content">
@@ -396,21 +428,24 @@
             <label for="currentPassword" class="form-label">Current Password</label>
             <div class="input-wrapper">
               <i data-lucide="shield-check" class="input-icon"></i>
-              <input type="password" id="currentPassword" name="currentPassword" class="form-input" placeholder="••••••••" required>
+              <input type="password" id="currentPassword" name="currentPassword" class="form-input"
+                placeholder="••••••••" required>
             </div>
           </div>
           <div class="form-group">
             <label for="newPassword" class="form-label">New Password</label>
             <div class="input-wrapper">
               <i data-lucide="key" class="input-icon"></i>
-              <input type="password" id="newPassword" name="newPassword" class="form-input" placeholder="••••••••" required>
+              <input type="password" id="newPassword" name="newPassword" class="form-input" placeholder="••••••••"
+                required>
             </div>
           </div>
           <div class="form-group">
             <label for="confirmPassword" class="form-label">Confirm New Password</label>
             <div class="input-wrapper">
               <i data-lucide="check-circle" class="input-icon"></i>
-              <input type="password" id="confirmPassword" name="confirmPassword" class="form-input" placeholder="••••••••" required>
+              <input type="password" id="confirmPassword" name="confirmPassword" class="form-input"
+                placeholder="••••••••" required>
             </div>
           </div>
           <div class="form-error" id="password-error" style="display:none"></div>
@@ -443,8 +478,8 @@
 
     // ── Tab switching ─────────────────────────────────────────────────────────
     const TAB_TITLES = { overview: 'Overview', students: 'Students', handbook: 'Handbook', meetings: 'Meeting Reports', fas: 'FAS Download', 'coordinator-profile': 'My Profile' };
-    const ALL_TABS = ['overview','students','handbook','meetings','fas','coordinator-profile'];
-    const HIDDEN_TABS = ['students','handbook','meetings','fas','coordinator-profile'];
+    const ALL_TABS = ['overview', 'students', 'handbook', 'meetings', 'fas', 'coordinator-profile'];
+    const HIDDEN_TABS = ['students', 'handbook', 'meetings', 'fas', 'coordinator-profile'];
 
     function switchTab(tab) {
       document.querySelectorAll('.sidebar-link[data-tab]').forEach(l => l.classList.toggle('active', l.dataset.tab === tab));
@@ -471,8 +506,8 @@
 
     async function initCoordinatorDashboard() {
       // Upload students
-      const uploadBtn   = document.getElementById('upload-students-btn');
-      const fileInput   = document.getElementById('students-file');
+      const uploadBtn = document.getElementById('upload-students-btn');
+      const fileInput = document.getElementById('students-file');
       const uploadError = document.getElementById('upload-error');
       const uploadSuccess = document.getElementById('upload-success');
 
@@ -512,7 +547,7 @@
       await loadStudents();
 
       // Meeting student selector
-      document.getElementById('meeting-student-select').addEventListener('change', async function() {
+      document.getElementById('meeting-student-select').addEventListener('change', async function () {
         const id = this.value;
         if (!id) { document.getElementById('meeting-report-area').innerHTML = ''; return; }
         await loadStudentMeeting(id);
@@ -565,7 +600,7 @@
       if (btn) window.deleteStudent(btn.dataset.id, btn.dataset.name);
     });
 
-    window.deleteStudent = async function(id, name) {
+    window.deleteStudent = async function (id, name) {
       if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
       try {
         const res = await fetch(`${API_BASE}/api/coordinator/students/${id}`, {
@@ -618,12 +653,12 @@
 
       const rowCount = 6;
       const rows = Array.from({ length: rowCount }, (_, i) => ({
-        no:     `Meeting_No_${i+1}`,
-        date:   `Meeting_Date_${i+1}`,
-        disc:   `Meeting_Discussion_${i+1}`,
-        ssign:  `Meeting_StudentSign_${i+1}`,
-        action: `Meeting_Action_${i+1}`,
-        msign:  `Meeting_MentorSign_${i+1}`,
+        no: `Meeting_No_${i + 1}`,
+        date: `Meeting_Date_${i + 1}`,
+        disc: `Meeting_Discussion_${i + 1}`,
+        ssign: `Meeting_StudentSign_${i + 1}`,
+        action: `Meeting_Action_${i + 1}`,
+        msign: `Meeting_MentorSign_${i + 1}`,
       }));
 
       // Check if any meeting has a discussion raised by student
@@ -640,17 +675,17 @@
       const cCell = (k, placeholder) => editMode
         ? `<input name="${k}" value="${escapeHtml(g(k))}" class="edit-input" placeholder="${placeholder}" style="min-width:7rem">`
         : (g(k)
-            ? `<span style="color:var(--emerald-600);font-weight:600">${escapeHtml(g(k))}</span>`
-            : `<span class="fas-field-empty" style="font-size:0.82rem">................................</span>`);
+          ? `<span style="color:var(--emerald-600);font-weight:600">${escapeHtml(g(k))}</span>`
+          : `<span class="fas-field-empty" style="font-size:0.82rem">................................</span>`);
 
-      const hodSign  = g('Meeting_HOD_Sign');
+      const hodSign = g('Meeting_HOD_Sign');
       const deanSign = g('Meeting_Dean_Sign');
 
       const officialUseFields = [
-        {label:'Admitted in Class: FE',    k:'OfficialUse_FE_Year'},
-        {label:'Admitted in Class: SE/DSE',k:'OfficialUse_SE_Year'},
-        {label:'Admitted in Class: TE',    k:'OfficialUse_TE_Year'},
-        {label:'Admitted in Class: BE',    k:'OfficialUse_BE_Year'},
+        { label: 'Admitted in Class: FE', k: 'OfficialUse_FE_Year' },
+        { label: 'Admitted in Class: SE/DSE', k: 'OfficialUse_SE_Year' },
+        { label: 'Admitted in Class: TE', k: 'OfficialUse_TE_Year' },
+        { label: 'Admitted in Class: BE', k: 'OfficialUse_BE_Year' },
       ];
 
       const officialUseHTML = officialUseFields.map(c => {
@@ -693,7 +728,7 @@
                   <td>${sCell(r.disc)}</td>
                   <td>${sCell(r.ssign)}</td>
                   <td>${cCell(r.action, 'Action taken')}</td>
-                  <td>${cCell(r.msign,  'Mentor sign')}</td>
+                  <td>${cCell(r.msign, 'Mentor sign')}</td>
                 </tr>`).join('')}
               </tbody>
             </table>
@@ -702,14 +737,14 @@
             <div class="fas-field">
               <span class="fas-field-label">Name &amp; Sign of Head of Department</span>
               ${editMode
-                ? `<input name="Meeting_HOD_Sign" value="${escapeHtml(hodSign)}" class="edit-input" placeholder="Name / Signature">`
-                : `<span class="fas-field-value ${hodSign ? '' : 'fas-field-empty'}">${hodSign || '................................'}</span>`}
+          ? `<input name="Meeting_HOD_Sign" value="${escapeHtml(hodSign)}" class="edit-input" placeholder="Name / Signature">`
+          : `<span class="fas-field-value ${hodSign ? '' : 'fas-field-empty'}">${hodSign || '................................'}</span>`}
             </div>
             <div class="fas-field">
               <span class="fas-field-label">Name &amp; Sign of Dean</span>
               ${editMode
-                ? `<input name="Meeting_Dean_Sign" value="${escapeHtml(deanSign)}" class="edit-input" placeholder="Name / Signature">`
-                : `<span class="fas-field-value ${deanSign ? '' : 'fas-field-empty'}">${deanSign || '................................'}</span>`}
+          ? `<input name="Meeting_Dean_Sign" value="${escapeHtml(deanSign)}" class="edit-input" placeholder="Name / Signature">`
+          : `<span class="fas-field-value ${deanSign ? '' : 'fas-field-empty'}">${deanSign || '................................'}</span>`}
             </div>
           </div>
           <div style="margin-top:1.25rem;padding:1.25rem;border:2px solid rgba(37,99,235,0.18);border-radius:1rem;background:rgba(239,246,255,0.6)">
@@ -730,7 +765,7 @@
     // Store current student data for edit toggle
     let currentMeetingStudent = null;
 
-    window.toggleCoordMeetingEdit = async function(studentId) {
+    window.toggleCoordMeetingEdit = async function (studentId) {
       const res = await fetch(`${API_BASE}/api/coordinator/students/${studentId}/profile`, {
         headers: { 'x-auth-token': localStorage.getItem('token') },
       });
@@ -738,7 +773,7 @@
       renderMeetingTable(currentMeetingStudent, true);
     };
 
-    window.saveCoordMeeting = async function(studentId) {
+    window.saveCoordMeeting = async function (studentId) {
       const form = document.getElementById('coord-meeting-form');
       if (!form) return;
       const profileData = {};
@@ -768,7 +803,7 @@
     };
 
     function escapeHtml(value) {
-      return String(value || '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#39;");
+      return String(value || '').replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;').replaceAll("'", "&#39;");
     }
   </script>
 
@@ -787,4 +822,5 @@
     </div>
   </footer>
 </body>
+
 </html>
