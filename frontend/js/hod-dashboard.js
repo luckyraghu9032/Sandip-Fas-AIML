@@ -72,7 +72,7 @@
     elements.userDisplayName.textContent = currentUser.name;
     elements.welcomeMsg.textContent = `Welcome, ${currentUser.name}. Add coordinators manually, review the full roster, and keep division assignments aligned from one workspace.`;
 
-    populateDivisionSelect(elements.manualCoordinatorDivision, '', 'Choose division');
+    // populateDivisionSelect removed for manual entry
     bindEvents();
     renderAll();
     lucide.createIcons();
@@ -283,7 +283,7 @@
       });
 
       elements.manualCoordinatorForm.reset();
-      populateDivisionSelect(elements.manualCoordinatorDivision, '', 'Choose division');
+      elements.manualCoordinatorDivision.value = '';
       showManualCoordinatorSuccess(`Coordinator added successfully. Initial sign-in password is set to PRN ${prnNumber}.`);
       await loadCoordinatorRoster();
     } catch (error) {
@@ -376,7 +376,7 @@
     return new Set(
       state.coordinators
         .map((coordinator) => coordinator.division)
-        .filter((division) => DIVISIONS.includes(division))
+        .filter((division) => division !== '')
     ).size;
   }
 
@@ -439,9 +439,7 @@
         <td>${escapeHtml(coordinator.email)}</td>
           <td>${escapeHtml(coordinator.prnNumber || '................................')}</td>
         <td>
-          <select class="form-input form-select table-select" data-division-email="${escapeHtml(coordinator.email)}">
-            ${buildDivisionOptionsMarkup(coordinator.division, 'Unassigned')}
-          </select>
+          <span class="division-badge">${escapeHtml(coordinator.division || 'Unassigned')}</span>
         </td>
         <td>
           <span class="panel-chip table-chip ${getCoordinatorStatusClassName(coordinator)}">${escapeHtml(getCoordinatorStatusLabel(coordinator))}</span>
@@ -808,8 +806,7 @@
   }
 
   function normalizeDivision(division) {
-    const normalized = String(division || '').trim().toUpperCase();
-    return DIVISIONS.includes(normalized) ? normalized : '';
+    return String(division || '').trim();
   }
 
   function isValidEmail(email) {
