@@ -13,6 +13,8 @@ const ALLOWED_ORIGINS = [
   'http://localhost:5500',        // VS Code Live Server
   'http://127.0.0.1:5500',
   'https://sandip-fas-aiml-frontend.vercel.app',  // Vercel frontend static site
+  'capacitor://localhost',        // Capacitor Android app
+  'http://localhost',             // Capacitor fallback origin
 ];
 
 const corsOptions = {

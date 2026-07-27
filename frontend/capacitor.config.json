@@ -1,0 +1,21 @@
+{
+  "appId": "com.sandipuniversity.fas",
+  "appName": "Sandip FAS",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": true,
+      "launchShowDuration": 2000,
+      "backgroundColor": "#0f172a",
+      "showSpinner": true,
+      "spinnerColor": "#f59e0b"
+    },
+    "StatusBar": {
+      "style": "DARK",
+      "backgroundColor": "#0f172a"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "sandip-fas-app",
+  "version": "1.0.0",
+  "description": "Sandip University FAS Management System - Android App",
+  "main": "index.html",
+  "scripts": {
+    "copy-web": "powershell -Command \"Copy-Item -Path index.html,coordinator-dashboard.html,coordinator-dashboard_temp.html,hod-dashboard.html,student-dashboard.html,privacy-policy.html,terms-of-policy.html -Destination www\\ -Force; Copy-Item -Path css -Destination www\\css -Recurse -Force; Copy-Item -Path js -Destination www\\js -Recurse -Force; Copy-Item -Path public -Destination www\\public -Recurse -Force\"",
+    "cap:sync": "npm run copy-web && npx cap sync android",
+    "cap:open": "npx cap open android",
+    "cap:run": "npx cap run android"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/splash-screen": "^7.0.0",
+    "@capacitor/status-bar": "^7.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.0.0",
+    "typescript": "^7.0.2"
+  }
+}
