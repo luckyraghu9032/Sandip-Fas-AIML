@@ -15,6 +15,7 @@ const ALLOWED_ORIGINS = [
   'https://sandip-fas-aiml-frontend.vercel.app',  // Vercel frontend static site
   'capacitor://localhost',        // Capacitor Android app
   'http://localhost',             // Capacitor fallback origin
+  'https://localhost',            // Capacitor Android (androidScheme: https)
 ];
 
 const corsOptions = {
