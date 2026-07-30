@@ -1,19 +1,14 @@
 require('../config/env');
 
-// Check if real email credentials are configured
-const isEmailConfigured =
-  process.env.EMAIL_USER &&
-  process.env.EMAIL_PASS &&
-  process.env.EMAIL_USER !== 'your_email@gmail.com' &&
-  process.env.EMAIL_PASS !== 'your_gmail_app_password';
+const RESEND_API_KEY = process.env.RESEND_API_KEY;
 
 /**
  * Send a 6-digit OTP to the given email address for MFA setup verification.
- * Falls back to console logging if email credentials are not configured or sending fails.
- * (Triggering restart)
+ * Uses Resend API (works reliably on Vercel serverless).
+ * Falls back to console logging if RESEND_API_KEY is not configured.
  */
 async function sendMfaSetupOtp(toEmail, otp, name) {
-  // Always print OTP to console (useful in dev AND as a fallback)
+  // Always print OTP to console as a fallback/debug reference
   console.log('\n' + '═'.repeat(55));
   console.log('  📧  MFA SETUP OTP');
   console.log('  Recipient : ' + toEmail);
@@ -21,28 +16,19 @@ async function sendMfaSetupOtp(toEmail, otp, name) {
   console.log('  Expires   : 10 minutes');
   console.log('═'.repeat(55) + '\n');
 
-  // Only attempt real email if credentials are configured
-  if (!isEmailConfigured) {
-    console.log('  ⚠️  DEV MODE: No email credentials configured.');
-    console.log('  Set EMAIL_USER and EMAIL_PASS in .env to send real emails.\n');
-    return; // Exit early — OTP is in the console above
+  // If no API key configured, just log and return (dev mode)
+  if (!RESEND_API_KEY || RESEND_API_KEY === 'your_resend_api_key') {
+    console.log('  ⚠️  DEV MODE: RESEND_API_KEY not set. OTP is in the console above.\n');
+    return;
   }
 
-  // Try to send real email — never crash the server if it fails
   try {
-    const nodemailer = require('nodemailer');
+    const { Resend } = require('resend');
+    const resend = new Resend(RESEND_API_KEY);
 
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    const mailOptions = {
-      from: `"Sandip University FAS" <${process.env.EMAIL_USER}>`,
-      to: toEmail,
+    const { data, error } = await resend.emails.send({
+      from: 'Sandip University FAS <onboarding@resend.dev>',
+      to: [toEmail],
       subject: 'Your Security Verification Code - Sandip University FAS',
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 520px; margin: 0 auto; background: #f8fafc; padding: 2rem; border-radius: 12px;">
@@ -53,7 +39,8 @@ async function sendMfaSetupOtp(toEmail, otp, name) {
           <div style="background: #ffffff; padding: 2rem; border-radius: 0 0 8px 8px; border: 1px solid #e2e8f0; border-top: none;">
             <p style="color: #334155;">Hello <strong>${name || 'Student'}</strong>,</p>
             <p style="color: #475569; line-height: 1.6;">
-              Your Two-Factor Authentication setup code is:
+              You requested to set up Two-Factor Authentication (2FA) on your FAS account.
+              Use the code below to verify your identity:
             </p>
             <div style="text-align: center; margin: 2rem 0;">
               <div style="display: inline-block; background: #f1f5f9; border: 2px dashed #94a3b8; border-radius: 8px; padding: 1rem 2.5rem;">
@@ -65,20 +52,22 @@ async function sendMfaSetupOtp(toEmail, otp, name) {
             </p>
             <hr style="border: none; border-top: 1px solid #e2e8f0; margin: 1.5rem 0;">
             <p style="color: #94a3b8; font-size: 0.8rem; text-align: center;">
-              If you did not request this, please ignore this email.
+              If you did not request this, please ignore this email. Your account is safe.
             </p>
           </div>
         </div>
       `,
-    };
+    });
 
-    await transporter.sendMail(mailOptions);
-    console.log(`  ✅ Email sent successfully to ${toEmail}\n`);
+    if (error) {
+      console.error('  ❌ Resend error:', error.message, '\n');
+    } else {
+      console.log(`  ✅ Email sent via Resend to ${toEmail} (ID: ${data.id})\n`);
+    }
 
-  } catch (emailError) {
-    // Email failed — log the error but DO NOT crash the server
-    // The OTP was already printed to console above, so the flow continues
-    console.error('  ❌ Email send failed (OTP still valid, check console above):', emailError.message, '\n');
+  } catch (err) {
+    // Never crash the server — OTP is still valid from the console above
+    console.error('  ❌ Email send failed:', err.message, '\n');
   }
 }
 
