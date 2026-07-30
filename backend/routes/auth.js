@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const speakeasy = require('speakeasy');
 const db = require('../config/db');
 const auth = require('../middleware/auth');
 const { ensureAppSchema } = require('../utils/schema');
@@ -83,6 +84,16 @@ router.post('/login', async (req, res) => {
 
     console.log(`Login successful for: ${user.email}`);
 
+    if (user.role === 'student' && user.mfa_enabled) {
+      // User has MFA enabled, require them to verify OTP first
+      const tempToken = jwt.sign(
+        { id: user.id, mfaTemp: true },
+        process.env.JWT_SECRET,
+        { expiresIn: '5m' }
+      );
+      return res.json({ requireMfa: true, tempToken });
+    }
+
     // Generate JWT
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role, division: user.division },
@@ -100,11 +111,71 @@ router.post('/login', async (req, res) => {
         division: user.division,
         department: user.department || '',
         prnNumber: user.prn_number || null,
+        mfa_enabled: user.mfa_enabled || false,
       },
     });
   } catch (error) {
     console.error('Login error:', error);
     res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// Verify MFA during login
+router.post('/login/verify-mfa', async (req, res) => {
+  const { tempToken, mfaToken } = req.body;
+
+  if (!tempToken || !mfaToken) {
+    return res.status(400).json({ error: 'Temporary token and MFA token are required' });
+  }
+
+  try {
+    const decoded = jwt.verify(tempToken, process.env.JWT_SECRET);
+    if (!decoded.mfaTemp) {
+      return res.status(401).json({ error: 'Invalid temporary token' });
+    }
+
+    const result = await db.query('SELECT * FROM users WHERE id = $1', [decoded.id]);
+    const user = result.rows[0];
+
+    if (!user || !user.mfa_enabled || !user.mfa_secret) {
+      return res.status(400).json({ error: 'MFA is not enabled for this user' });
+    }
+
+    const verified = speakeasy.totp.verify({
+      secret: user.mfa_secret,
+      encoding: 'base32',
+      token: mfaToken,
+      window: 1
+    });
+
+    if (!verified) {
+      return res.status(401).json({ error: 'Invalid MFA token' });
+    }
+
+    // MFA successful, generate full JWT
+    const token = jwt.sign(
+      { id: user.id, email: user.email, role: user.role, division: user.division },
+      process.env.JWT_SECRET,
+      { expiresIn: '1d' }
+    );
+
+    res.json({
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        division: user.division,
+        department: user.department || '',
+        prnNumber: user.prn_number || null,
+        mfa_enabled: user.mfa_enabled || false,
+      },
+    });
+
+  } catch (error) {
+    console.error('MFA verify error during login:', error);
+    res.status(401).json({ error: 'Invalid or expired temporary token' });
   }
 });
 

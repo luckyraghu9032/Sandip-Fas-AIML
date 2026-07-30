@@ -41,6 +41,26 @@ async function syncUsersTable() {
 
   await db.query(`
     ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS mfa_secret VARCHAR(255)
+  `);
+
+  await db.query(`
+    ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS mfa_enabled BOOLEAN DEFAULT FALSE
+  `);
+
+  await db.query(`
+    ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS email_otp VARCHAR(10)
+  `);
+
+  await db.query(`
+    ALTER TABLE users
+    ADD COLUMN IF NOT EXISTS email_otp_expiry TIMESTAMP
+  `);
+
+  await db.query(`
+    ALTER TABLE users
     ALTER COLUMN division TYPE VARCHAR(50)
   `);
 

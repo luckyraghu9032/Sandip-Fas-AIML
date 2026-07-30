@@ -40,7 +40,6 @@ const loginError = document.getElementById('login-error');
 const loginBtn = document.getElementById('login-btn');
 
 let currentRole = '';
-let tempMfaToken = null;
 
 const portalConfig = {
   'HOD Portal': { icon: 'briefcase', colorClass: 'bg-blue-light', textColor: 'text-blue' },
@@ -88,11 +87,6 @@ window.openLoginModal = function (role) {
   // Clear form
   loginForm.reset();
   loginError.style.display = 'none';
-  document.getElementById('mfa-group').style.display = 'none';
-  document.getElementById('password').closest('.form-group').style.display = 'block';
-  document.getElementById('mfaCode').required = false;
-  loginBtn.innerHTML = `<span>Sign In</span><i data-lucide="arrow-right"></i>`;
-  tempMfaToken = null;
 
   // Show modal
   modal.style.display = 'flex';
@@ -124,26 +118,18 @@ loginForm.addEventListener('submit', async (e) => {
 
   try {
     const password = document.getElementById('password').value;
-    let endpoint = `${API_BASE}/api/auth/login`;
+    const endpoint = `${API_BASE}/api/auth/login`;
     let payload = { password };
 
-    if (tempMfaToken) {
-      endpoint = `${API_BASE}/api/auth/login/verify-mfa`;
-      payload = {
-        tempToken: tempMfaToken,
-        mfaToken: document.getElementById('mfaCode').value
-      };
+    if (currentRole === 'Student Portal') {
+      payload.prnNumber = document.getElementById('prnNumber').value;
+      payload.role = 'student';
+    } else if (currentRole === 'Coordinator Portal') {
+      payload.email = document.getElementById('username').value;
+      payload.role = 'coordinator';
     } else {
-      if (currentRole === 'Student Portal') {
-        payload.prnNumber = document.getElementById('prnNumber').value;
-        payload.role = 'student';
-      } else if (currentRole === 'Coordinator Portal') {
-        payload.email = document.getElementById('username').value;
-        payload.role = 'coordinator';
-      } else {
-        payload.email = document.getElementById('username').value;
-        payload.role = 'hod';
-      }
+      payload.email = document.getElementById('username').value;
+      payload.role = 'hod';
     }
 
     const response = await fetch(endpoint, {
@@ -157,26 +143,9 @@ loginForm.addEventListener('submit', async (e) => {
     const data = await response.json().catch(() => ({}));
 
     if (response.ok) {
-      if (data.requireMfa) {
-        tempMfaToken = data.tempToken;
-        document.getElementById('username-group').style.display = 'none';
-        document.getElementById('prn-group').style.display = 'none';
-        document.getElementById('password').closest('.form-group').style.display = 'none';
-        document.getElementById('mfa-group').style.display = 'block';
-        document.getElementById('mfaCode').required = true;
-        loginBtn.innerHTML = `<span>Verify Code</span><i data-lucide="arrow-right"></i>`;
-        lucide.createIcons();
-        return;
-      }
-
       // Store token and redirect
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
-
-      if (currentRole === 'Student Portal' && !data.user.mfa_enabled) {
-        window.location.href = 'mfa-setup.html';
-        return;
-      }
 
       if (currentRole === 'HOD Portal') {
         window.location.href = 'hod-dashboard.html';
@@ -193,11 +162,7 @@ loginForm.addEventListener('submit', async (e) => {
     loginError.textContent = 'Network error. Please try again later.';
     loginError.style.display = 'block';
   } finally {
-    if (!tempMfaToken) {
-      loginBtn.innerHTML = `<span>Sign In</span><i data-lucide="arrow-right"></i>`;
-    } else {
-      loginBtn.innerHTML = `<span>Verify Code</span><i data-lucide="arrow-right"></i>`;
-    }
+    loginBtn.innerHTML = originalBtnContent;
     loginBtn.disabled = false;
     lucide.createIcons();
   }
