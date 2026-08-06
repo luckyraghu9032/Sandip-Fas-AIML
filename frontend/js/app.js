@@ -128,10 +128,10 @@ loginForm.addEventListener('submit', async (e) => {
     let payload = { password };
 
     if (tempMfaToken) {
-      endpoint = `${API_BASE}/api/auth/login/verify-mfa`;
+      endpoint = `${API_BASE}/api/auth/login/verify-email-otp`;
       payload = {
         tempToken: tempMfaToken,
-        mfaToken: document.getElementById('mfaCode').value
+        otp: document.getElementById('mfaCode').value
       };
     } else {
       if (currentRole === 'Student Portal') {
@@ -157,26 +157,26 @@ loginForm.addEventListener('submit', async (e) => {
     const data = await response.json().catch(() => ({}));
 
     if (response.ok) {
-      if (data.requireMfa) {
+      if (data.requireEmailOtp) {
+        // Email OTP sent — show OTP input with masked email hint
         tempMfaToken = data.tempToken;
         document.getElementById('username-group').style.display = 'none';
         document.getElementById('prn-group').style.display = 'none';
         document.getElementById('password').closest('.form-group').style.display = 'none';
         document.getElementById('mfa-group').style.display = 'block';
+        document.getElementById('otp-email-hint').textContent =
+          `A 6-digit code has been sent to ${data.maskedEmail}. Check your inbox (and spam).`;
         document.getElementById('mfaCode').required = true;
+        document.getElementById('mfaCode').value = '';
+        document.getElementById('mfaCode').focus();
         loginBtn.innerHTML = `<span>Verify Code</span><i data-lucide="arrow-right"></i>`;
         lucide.createIcons();
         return;
       }
 
-      // Store token and redirect
+      // OTP verified — store token and go to dashboard
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
-
-      if (currentRole === 'Student Portal' && !data.user.mfa_enabled) {
-        window.location.href = 'mfa-setup.html';
-        return;
-      }
 
       if (currentRole === 'HOD Portal') {
         window.location.href = 'hod-dashboard.html';

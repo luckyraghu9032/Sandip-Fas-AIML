@@ -202,10 +202,11 @@
             </div>
           </div>
           <div class="form-group" id="mfa-group" style="display: none;">
-            <label for="mfaCode" class="form-label">Authenticator Code (6-digit)</label>
+            <label for="mfaCode" class="form-label">Email Verification Code (6-digit)</label>
+            <p id="otp-email-hint" style="font-size:0.8rem; color:#64748b; margin: -0.25rem 0 0.5rem 0;">A code has been sent to your registered email.</p>
             <div class="input-wrapper">
-              <i data-lucide="shield-check" class="input-icon"></i>
-              <input type="text" id="mfaCode" name="mfaCode" class="form-input" placeholder="e.g. 123456" maxlength="6">
+              <i data-lucide="mail-check" class="input-icon"></i>
+              <input type="text" id="mfaCode" name="mfaCode" class="form-input" placeholder="Enter 6-digit code" maxlength="6" inputmode="numeric" autocomplete="one-time-code">
             </div>
           </div>
           <div class="form-error" id="login-error" style="display: none;"></div>

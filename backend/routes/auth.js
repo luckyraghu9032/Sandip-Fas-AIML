@@ -1,12 +1,12 @@
 const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const speakeasy = require('speakeasy');
 const db = require('../config/db');
 const auth = require('../middleware/auth');
 const { ensureAppSchema } = require('../utils/schema');
 const { normalizeDateOfBirth, normalizeEmail, normalizeRole, normalizeText } = require('../utils/normalizers');
+const { sendLoginOtp } = require('../utils/email');
 require('../config/env');
 
 // Login endpoint
@@ -84,17 +84,40 @@ router.post('/login', async (req, res) => {
 
     console.log(`Login successful for: ${user.email}`);
 
-    if (user.role === 'student' && user.mfa_enabled) {
-      // User has MFA enabled, require them to verify OTP first
-      const tempToken = jwt.sign(
-        { id: user.id, mfaTemp: true },
-        process.env.JWT_SECRET,
-        { expiresIn: '5m' }
+    // For students: always send email OTP before granting access
+    if (user.role === 'student') {
+      if (!user.email) {
+        return res.status(400).json({ error: 'No email address on your account. Please contact the administrator.' });
+      }
+
+      // Generate 6-digit OTP
+      const otp = String(Math.floor(100000 + Math.random() * 900000));
+      const expiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+      // Save OTP to DB
+      await db.query(
+        'UPDATE users SET email_otp = $1, email_otp_expiry = $2 WHERE id = $3',
+        [otp, expiry, user.id]
       );
-      return res.json({ requireMfa: true, tempToken });
+
+      // Send OTP email (non-blocking — OTP still in console if email fails)
+      await sendLoginOtp(user.email, otp, user.name);
+
+      // Issue a short-lived temp token
+      const tempToken = jwt.sign(
+        { id: user.id, emailOtpTemp: true },
+        process.env.JWT_SECRET,
+        { expiresIn: '10m' }
+      );
+
+      // Mask email for display (e.g. r***@gmail.com)
+      const [localPart, domain] = user.email.split('@');
+      const maskedEmail = localPart[0] + '***@' + domain;
+
+      return res.json({ requireEmailOtp: true, tempToken, maskedEmail });
     }
 
-    // Generate JWT
+    // HOD / Coordinator: direct JWT (no OTP)
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role, division: user.division },
       process.env.JWT_SECRET,
@@ -120,39 +143,46 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Verify MFA during login
-router.post('/login/verify-mfa', async (req, res) => {
-  const { tempToken, mfaToken } = req.body;
+// Verify Email OTP during student login
+router.post('/login/verify-email-otp', async (req, res) => {
+  const { tempToken, otp } = req.body;
 
-  if (!tempToken || !mfaToken) {
-    return res.status(400).json({ error: 'Temporary token and MFA token are required' });
+  if (!tempToken || !otp) {
+    return res.status(400).json({ error: 'Temporary token and OTP are required.' });
   }
 
   try {
     const decoded = jwt.verify(tempToken, process.env.JWT_SECRET);
-    if (!decoded.mfaTemp) {
-      return res.status(401).json({ error: 'Invalid temporary token' });
+    if (!decoded.emailOtpTemp) {
+      return res.status(401).json({ error: 'Invalid or expired session. Please log in again.' });
     }
 
-    const result = await db.query('SELECT * FROM users WHERE id = $1', [decoded.id]);
+    const result = await db.query(
+      'SELECT id, name, email, role, division, department, prn_number, mfa_enabled, email_otp, email_otp_expiry FROM users WHERE id = $1',
+      [decoded.id]
+    );
     const user = result.rows[0];
 
-    if (!user || !user.mfa_enabled || !user.mfa_secret) {
-      return res.status(400).json({ error: 'MFA is not enabled for this user' });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found.' });
     }
 
-    const verified = speakeasy.totp.verify({
-      secret: user.mfa_secret,
-      encoding: 'base32',
-      token: mfaToken,
-      window: 1
-    });
-
-    if (!verified) {
-      return res.status(401).json({ error: 'Invalid MFA token' });
+    if (!user.email_otp) {
+      return res.status(400).json({ error: 'No verification code found. Please log in again.' });
     }
 
-    // MFA successful, generate full JWT
+    if (new Date() > new Date(user.email_otp_expiry)) {
+      await db.query('UPDATE users SET email_otp = NULL, email_otp_expiry = NULL WHERE id = $1', [user.id]);
+      return res.status(400).json({ error: 'Verification code has expired. Please log in again.' });
+    }
+
+    if (otp.trim() !== user.email_otp) {
+      return res.status(400).json({ error: 'Incorrect verification code. Please try again.' });
+    }
+
+    // OTP correct — clear it and issue full JWT
+    await db.query('UPDATE users SET email_otp = NULL, email_otp_expiry = NULL WHERE id = $1', [user.id]);
+
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role, division: user.division },
       process.env.JWT_SECRET,
@@ -174,8 +204,8 @@ router.post('/login/verify-mfa', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('MFA verify error during login:', error);
-    res.status(401).json({ error: 'Invalid or expired temporary token' });
+    console.error('Email OTP verify error during login:', error);
+    res.status(401).json({ error: 'Invalid or expired session. Please log in again.' });
   }
 });
 

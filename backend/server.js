@@ -39,14 +39,12 @@ const hodRoutes = require('./routes/hod');
 const coordinatorRoutes = require('./routes/coordinator');
 const studentRoutes = require('./routes/student');
 const notificationRoutes = require('./routes/notifications');
-const mfaRoutes = require('./routes/mfa');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/hod', hodRoutes);
 app.use('/api/coordinator', coordinatorRoutes);
 app.use('/api/student', studentRoutes);
 app.use('/api/notifications', notificationRoutes);
-app.use('/api/mfa', mfaRoutes);
 
 // Basic health check
 app.get('/api/health', (req, res) => {
