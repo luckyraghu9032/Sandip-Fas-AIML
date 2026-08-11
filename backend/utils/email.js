@@ -57,6 +57,10 @@ async function sendLoginOtp(toEmail, otp, name) {
   const gmailUser = process.env.GMAIL_USER;
   const gmailPass = process.env.GMAIL_APP_PASS;
 
+  // Inline diagnostics (visible in Vercel request logs)
+  console.log('  [EMAIL DIAG] GMAIL_USER     :', gmailUser || '❌ NOT SET');
+  console.log('  [EMAIL DIAG] GMAIL_APP_PASS :', gmailPass ? `✅ SET (${gmailPass.length} chars, first: "${gmailPass[0]}", last: "${gmailPass[gmailPass.length-1]}")` : '❌ NOT SET');
+
   if (gmailUser && gmailPass && gmailPass !== 'your_gmail_app_password') {
     try {
       const nodemailer = require('nodemailer');
