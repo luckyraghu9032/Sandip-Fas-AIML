@@ -53,32 +53,7 @@ async function sendLoginOtp(toEmail, otp, name) {
     </div>
   `;
 
-  // ── Production: use Resend (HTTPS API — works on Vercel) ──────────────────
-  const resendKey = process.env.RESEND_API_KEY;
-  if (resendKey && resendKey !== 'your_resend_api_key') {
-    try {
-      const { Resend } = require('resend');
-      const resend = new Resend(resendKey);
-
-      const { data, error } = await resend.emails.send({
-        from: 'Sandip University FAS <onboarding@resend.dev>',
-        to: [toEmail],
-        subject: 'Your Login Verification Code - Sandip University FAS',
-        html,
-      });
-
-      if (error) {
-        console.error('  ❌ Resend error:', error.message, '\n');
-      } else {
-        console.log(`  ✅ Login OTP sent via Resend to ${toEmail} (ID: ${data.id})\n`);
-      }
-    } catch (err) {
-      console.error('  ❌ Resend failed:', err.message, '\n');
-    }
-    return;
-  }
-
-  // ── Local dev: use Gmail SMTP via Nodemailer ──────────────────────────────
+  // ── Email sending via Gmail SMTP (Nodemailer) ──────────────────────────────
   const gmailUser = process.env.GMAIL_USER;
   const gmailPass = process.env.GMAIL_APP_PASS;
 
