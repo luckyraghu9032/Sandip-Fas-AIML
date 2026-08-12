@@ -401,6 +401,20 @@ router.post('/upload-students', auth, upload.single('file'), async (req, res) =>
       return res.status(400).json({ error: 'No file uploaded' });
     }
 
+    // Validate file type — only allow Excel formats
+    const allowedMimes = [
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+      'application/vnd.ms-excel',                                           // .xls
+      'application/octet-stream',                                           // some browsers use this for .xlsx
+    ];
+    const allowedExts = ['.xlsx', '.xls'];
+    const fileExt = req.file.originalname
+      ? '.' + req.file.originalname.split('.').pop().toLowerCase()
+      : '';
+    if (!allowedMimes.includes(req.file.mimetype) && !allowedExts.includes(fileExt)) {
+      return res.status(400).json({ error: 'Only Excel files (.xlsx, .xls) are allowed.' });
+    }
+
     // Parse Excel file
     const XLSX = require('xlsx');
     const workbook = XLSX.read(req.file.buffer, { type: 'buffer' });
@@ -681,11 +695,11 @@ router.get('/students/:id/profile', auth, async (req, res) => {
     const result = await db.query(
       `SELECT id, name, email, prn_number, division, department, profile_data
        FROM users
-       WHERE id = $1 AND role = 'student'`,
-      [req.params.id]
+       WHERE id = $1 AND role = 'student' AND division = $2`,
+      [req.params.id, coordinator.division]
     );
 
-    if (!result.rows.length) return res.status(404).json({ error: 'Student not found.' });
+    if (!result.rows.length) return res.status(404).json({ error: 'Student not found in your division.' });
 
     const row = result.rows[0];
     // Fetch HOD profile data
@@ -731,10 +745,10 @@ router.patch('/students/:id/meeting', auth, async (req, res) => {
 
     // Fetch existing profile_data and merge
     const existing = await db.query(
-      `SELECT id, profile_data FROM users WHERE id = $1 AND role = 'student'`,
-      [req.params.id]
+      `SELECT id, profile_data FROM users WHERE id = $1 AND role = 'student' AND division = $2`,
+      [req.params.id, coordinator.division]
     );
-    if (!existing.rows.length) return res.status(404).json({ error: 'Student not found.' });
+    if (!existing.rows.length) return res.status(404).json({ error: 'Student not found in your division.' });
 
     const merged = { ...(existing.rows[0].profile_data || {}), ...profileData };
 
@@ -765,10 +779,10 @@ router.patch('/students/:id/profile', auth, async (req, res) => {
     }
 
     const existing = await db.query(
-      `SELECT id, profile_data FROM users WHERE id = $1 AND role = 'student'`,
-      [req.params.id]
+      `SELECT id, profile_data FROM users WHERE id = $1 AND role = 'student' AND division = $2`,
+      [req.params.id, coordinator.division]
     );
-    if (!existing.rows.length) return res.status(404).json({ error: 'Student not found.' });
+    if (!existing.rows.length) return res.status(404).json({ error: 'Student not found in your division.' });
 
     const merged = { ...(existing.rows[0].profile_data || {}), ...profileData };
 

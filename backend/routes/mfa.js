@@ -1,4 +1,5 @@
 const express = require('express');
+const crypto = require('crypto');
 const router = express.Router();
 const speakeasy = require('speakeasy');
 const qrcode = require('qrcode');
@@ -30,7 +31,7 @@ router.post('/send-setup-email', auth, async (req, res) => {
     }
 
     // Generate a cryptographically random 6-digit OTP
-    const otp = String(Math.floor(100000 + Math.random() * 900000));
+    const otp = String(crypto.randomInt(100000, 1000000));
     const expiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes from now
 
     // Save OTP and expiry in database

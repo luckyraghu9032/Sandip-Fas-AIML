@@ -1,4 +1,5 @@
 const express = require('express');
+const crypto = require('crypto');
 const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -91,7 +92,7 @@ router.post('/login', async (req, res) => {
       }
 
       // Generate 6-digit OTP
-      const otp = String(Math.floor(100000 + Math.random() * 900000));
+      const otp = String(crypto.randomInt(100000, 1000000));
       const expiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
       // Save OTP to DB
@@ -236,8 +237,16 @@ router.post('/change-password', auth, async (req, res) => {
       return res.status(400).json({ error: 'Incorrect current password' });
     }
 
+    // Validate new password complexity
+    const passwordPolicy = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{12,}$/;
+    if (!passwordPolicy.test(newPassword)) {
+      return res.status(400).json({
+        error: 'New password must be at least 12 characters and include uppercase, lowercase, a number, and a special character (!@#$%^&* etc.).',
+      });
+    }
+
     // Hash new password
-    const salt = await bcrypt.genSalt(10);
+    const salt = await bcrypt.genSalt(12);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
     // Update password in database

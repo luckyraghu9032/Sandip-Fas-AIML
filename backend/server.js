@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 require('./config/env');
 const { ensureAppSchema } = require('./utils/schema');
 
@@ -30,8 +32,30 @@ const corsOptions = {
   credentials: true
 };
 
+// Security: HTTP headers
+app.use(helmet());
+
+// Rate limiter: max 10 login attempts per IP per 15 minutes
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many login attempts. Please try again after 15 minutes.' },
+});
+
+// Rate limiter: max 10 OTP attempts per IP per 15 minutes
+const otpLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many verification attempts. Please try again after 15 minutes.' },
+});
+
 app.use(cors(corsOptions));
-app.use(express.json());
+app.use(express.json({ limit: '50kb' }));
+app.use(express.urlencoded({ extended: false, limit: '50kb' }));
 
 // Routes
 const authRoutes = require('./routes/auth');
@@ -40,20 +64,23 @@ const coordinatorRoutes = require('./routes/coordinator');
 const studentRoutes = require('./routes/student');
 const notificationRoutes = require('./routes/notifications');
 
+app.use('/api/auth/login', loginLimiter);
+app.use('/api/auth/login/verify-email-otp', otpLimiter);
+app.use('/api/mfa/verify-email-otp', otpLimiter);
+app.use('/api/mfa/verify-setup', otpLimiter);
 app.use('/api/auth', authRoutes);
 app.use('/api/hod', hodRoutes);
 app.use('/api/coordinator', coordinatorRoutes);
 app.use('/api/student', studentRoutes);
 app.use('/api/notifications', notificationRoutes);
 
-// Basic health check
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'sandip-fas-backend is running and connected to Neon' });
+  res.json({ status: 'ok' });
 });
 
 // Root route for base URL
 app.get('/', (req, res) => {
-  res.send('Sandip FAS Backend is up and running successfully on Vercel!');
+  res.send('OK');
 });
 
 // NOTE: static files are served by Render Static Site (sandip-fas-frontend)
@@ -62,7 +89,12 @@ app.use((err, req, res, next) => {
   const isJsonParseError = err instanceof SyntaxError && err.type === 'entity.parse.failed';
   const statusCode = isJsonParseError ? 400 : (err.status || err.statusCode || 500);
 
-  console.error(`${req.method} ${req.originalUrl} failed:`, err.stack || err);
+  // Only log full stack in development to avoid leaking internals
+  if (process.env.NODE_ENV !== 'production') {
+    console.error(`${req.method} ${req.originalUrl} failed:`, err.stack || err);
+  } else {
+    console.error(`${req.method} ${req.originalUrl} failed: ${err.message}`);
+  }
 
   if (res.headersSent) {
     next(err);
